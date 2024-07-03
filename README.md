@@ -17,7 +17,7 @@ __2. Install necessary libraries__
 
 python -m pip install kafka-python river
 
-__3. Run the Producer and comsumer in a asynchronous manner keeping active the watchdog__
+__3. Run the Producer and comsumer in a asynchronous manner keeping active the watchdog in case new images are dumped in the folder__
 
 python producer.py &
 
