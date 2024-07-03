@@ -9,11 +9,14 @@ Initially we will use the River library (Creme), which is a powerful tool for ta
 Steps:
 
 __Run Kafka deploying the container according to the docker-compose.yaml__
+
 docker-compose up
 
 __Install necessary libraries__
+
 python -m pip install kafka-python river
 
 __Run the Producer and comsumer in a asynchronous manner keeping active the watchdog__
+
 python producer.py &
 python consumer.py &
