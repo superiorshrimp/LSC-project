@@ -1,4 +1,4 @@
-# Mobula
+# Mobula, Kafka based 
 Online learning classification framework for medical imaging
 
 Sandbox for the machine learning oracle for medical imaging with online/incremental learning.
