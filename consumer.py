@@ -6,14 +6,14 @@ import numpy as np
 consumer = KafkaConsumer('image_topic', bootstrap_servers='localhost:9092')
 
 # Preprocessing pipeline for image classification (example: using standard scaler)
-preprocessor = compose.TransformerUnion([
+preprocessor = compose.TransformerUnion(
     preprocessing.StandardScaler()
-])
+)
 
 # Classifier (example: using Naive Bayes from River)
 from river import naive_bayes
 
-#CHANGE THIS NAIVE BAYES CLASSIFIER WITH RESNET FROM PYTLARZ ET AL.
+# TODO: CHANGE THIS NAIVE BAYES CLASSIFIER WITH RESNET FROM PYTLARZ ET AL.
 model = naive_bayes.GaussianNB()
 
 # Consume messages and classify images

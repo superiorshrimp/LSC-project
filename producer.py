@@ -7,7 +7,7 @@ from kafka import KafkaProducer
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
 # Folder to monitor where the pathologists will dump their images
-folder_to_watch = '/path/to/your/image/folder'
+folder_to_watch = './data'
 
 # Event handler for new files
 class NewFileHandler(FileSystemEventHandler):

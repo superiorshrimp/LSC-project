@@ -9,16 +9,20 @@ Initially we will use the River library (Creme), which is a powerful tool for ta
 
 Steps:
 
+__0. Download the dataset__
+
+https://zenodo.org/records/10807474
+
 __1. Run Kafka deploying the container according to the docker-compose.yaml__
 
 docker-compose up
 
 __2. Install necessary libraries__
 
-python -m pip install kafka-python river
+python -m pip install kafka-python river pytest watchdog
 
 __3. Run the Producer and comsumer in a asynchronous manner keeping active the watchdog in case new images are dumped in the folder__
 
-python producer.py &
-
-python consumer.py &
+In two new terminal shells:
+ - python producer.py
+ - python consumer.py
