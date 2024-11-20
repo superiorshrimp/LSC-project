@@ -37,10 +37,10 @@ for msg in consumer:
 
     features = extract_features(image_data)
 
+    preprocessor.learn_one(features)
     features_scaled = preprocessor.transform_one(features)
 
     model.learn_one(features_scaled, label)
-
     y_pred = model.predict_one(features_scaled)
 
     print(f"Image classified as: {y_pred} (real class: {label})")
