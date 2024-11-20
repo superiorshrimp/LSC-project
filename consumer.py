@@ -1,28 +1,47 @@
 from kafka import KafkaConsumer
-from river import preprocessing, compose
+from river import preprocessing, naive_bayes, compose
 import numpy as np
+import json
 
-# Kafka consumer setup
-consumer = KafkaConsumer('image_topic', bootstrap_servers='localhost:9092')
+consumer = KafkaConsumer(
+    'image_topic',
+    bootstrap_servers='localhost:9092',
+    value_deserializer=lambda x: x,
+    key_deserializer=lambda x: json.loads(x.decode('utf-8')) if x else None
+)
 
-# Preprocessing pipeline for image classification (example: using standard scaler)
 preprocessor = compose.TransformerUnion(
     preprocessing.StandardScaler()
 )
 
-# Classifier (example: using Naive Bayes from River)
-from river import naive_bayes
-
-# TODO: CHANGE THIS NAIVE BAYES CLASSIFIER WITH RESNET FROM PYTLARZ ET AL.
 model = naive_bayes.GaussianNB()
 
-# Consume messages and classify images
+def extract_features(image_data):
+    """
+    Converts the image to the set of features.
+    """
+    image_array = np.frombuffer(image_data, dtype=np.uint8)
+
+    red_mean = image_array[::3].mean() if len(image_array) >= 3 else 0
+    green_mean = image_array[1::3].mean() if len(image_array) >= 3 else 0
+    blue_mean = image_array[2::3].mean() if len(image_array) >= 3 else 0
+    return {"red_mean": red_mean, "green_mean": green_mean, "blue_mean": blue_mean}
+
 for msg in consumer:
-    # Assume msg.value is the image data (you might need to decode or process it)
-    image_data = np.frombuffer(msg.value, dtype=np.uint8)  # Example: convert to numpy array
-    # Preprocess image data (example: scale)
-    preprocessed_data = preprocessor.transform_one(image_data)
-    # Predict using the model
-    y_pred = model.predict_one(preprocessed_data)
-    print(f"Image classified as: {y_pred}")
+    image_data = msg.value
+    label = msg.key.get("label") if msg.key else None
+
+    if label is None:
+        print("No label, skipping")
+        continue
+
+    features = extract_features(image_data)
+
+    features_scaled = preprocessor.transform_one(features)
+
+    model.learn_one(features_scaled, label)
+
+    y_pred = model.predict_one(features_scaled)
+
+    print(f"Image classified as: {y_pred} (real class: {label})")
 
