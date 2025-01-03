@@ -19,7 +19,7 @@ docker-compose up
 
 __2. Install necessary libraries__
 
-python -m pip install kafka-python river pytest watchdog
+python -m pip install kafka-python river pytest watchdog deep-river
 
 __3. Run the Producer and comsumer in a asynchronous manner keeping active the watchdog in case new images are dumped in the folder__
 
